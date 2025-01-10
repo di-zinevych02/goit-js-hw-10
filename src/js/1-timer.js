@@ -4,8 +4,15 @@ import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-let suserSelectedDate = null;
-btnTimerInput.disabled = true;
+сonst inputDatePicker = document.querySelector('#datetime-picker');
+const btnDateStart = document.querySelector('[data-start]');
+const daysEl = document.querySelector('[data-days]');
+const hoursEl = document.querySelector('[data-hours]');
+const minutesEl = document.querySelector('[data-minutes]');
+const secondsEl = document.querySelector('[data-seconds]');
+
+let userSelectedDate = null;
+btnTimerStart.disabled = true;
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -13,51 +20,73 @@ flatpickr('#datetime-picker', {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    userSelectedDate = selectedDates[0];
+ if (userSelectedDate <= new Date()) {
+      btnTimerStart.disabled = true;
+
+      iziToast.error({
+        title: 'Error',
+        message: 'Please choose a date in the future',
+      });
+    } else {
+      btnTimerStart.disabled = false;
+
+      iziToast.success({
+        title: 'Success',
+        message: 'Valid date selected!',
+      });
+    }
   },
 });
-// const timer = {
-//     deadLine: selectedDates,
-//     intervalValid: null,
+ function convertMs(ms) {
+  // Number of milliseconds per unit of time
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-//     start() {
-//         this.intervalId = setInterval(() => {
-//             const diff = this.deadline - Date.now();
+  // Remaining days
+  const days = Math.floor(ms / day);
+  // Remaining hours
+  const hours = Math.floor((ms % day) / hour);
+  // Remaining minutes
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  // Remaining seconds
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-//             if (diff <= 0) {
-//                 this.stop();
+  return { days, hours, minutes, seconds };
+}
 
-//                 return;
-//             }
+console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-//             const timeComponents = this.getTimeComponents(diff);
+// В інтерфейсі таймера необхідно додавати 0, якщо в числі менше двох символів. Напиши функцію, наприклад addLeadingZero(value), яка використовує метод рядка padStart() і перед відмальовуванням інтерфейсу форматує значення.
+const addLeadingZero = value => value.toString().padStart(2, '0');
 
-//             this.elements.days.textContent = this.pad(timeComponents.days);
-//             this.elements.hours.textContent = this.pad(timeComponents.hours);
-//             this.elements.minutes.textContent = this.pad(timeComponents.minutes);
-//             this.elements.seconds.textContent = this.pad(timeComponents.seconds);
-//         }, 1000);
-//     },
+btnTimerStart.addEventListener('click', () => {
+  btnDateStart.disabled = true;
+  inputDatePicker.disabled = true;
 
-//     stop() {
-//         clearInterval(this.intervalId);
-//     },
-// };
-//   getTimeComponents(diff) {
-//     const days = Math.floor(diff / 1000 / 60 / 60 / 24);
-//     const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
-//     const minutes = Math.floor(diff / 1000 / 60) % 60;
-//     const seconds = Math.floor(diff / 1000) % 60;
+  intervalId = setInterval()) => {
+  // скільки часу залишилось до вказаної дати
+  const nowDate = new Date();
+  const timeResult = userSelectedDate - nowDate;
+  const { days, hours, minutes, seconds } = convertMs(timeResult);
 
-//     return {
-//       days,
-//       hours,
-//       minutes,
-//       seconds,
-//     };
-//   },
+  daysEl.textContent = addLeadingZero(days);
+  hoursEl.textContent = addLeadingZero(hours);
+  minutesEl.textContent = addLeadingZero(minutes);
+  secondsEl.textContent = addLeadingZero(seconds);
+  // Перевіряємо за допомогою методу .every чи задовольняють усі елементи умови колбек-функціїї.
+  // Таймер зупиняється, коли доходить до кінцевої дати, тобто залишок часу дорівнює нулю і інтерфейс виглядає так 00:00:00:00.
+  const isTimerStop = [days, hours, minutes, seconds].every(
+    value => value === 0
+  );
 
-//   pad(value) {
-//     return String(value).padStart(2, '0');
-//   },
-// };
+  if (isTimerStop) {
+    clearInterval(intervalBack);
+    inputDatePicker.disabled = false;
+  }
+}, 1000);
+});
