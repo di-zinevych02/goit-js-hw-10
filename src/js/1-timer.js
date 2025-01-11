@@ -4,7 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-сonst inputDatePicker = document.querySelector('#datetime-picker');
+const inputDatePicker = document.querySelector('#datetime-picker');
 const btnDateStart = document.querySelector('[data-start]');
 const daysEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
@@ -12,7 +12,8 @@ const minutesEl = document.querySelector('[data-minutes]');
 const secondsEl = document.querySelector('[data-seconds]');
 
 let userSelectedDate = null;
-btnTimerStart.disabled = true;
+let intervalId = null;
+btnDateStart.disabled = true;
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -21,15 +22,15 @@ flatpickr('#datetime-picker', {
   minuteIncrement: 1,
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
- if (userSelectedDate <= new Date()) {
-      btnTimerStart.disabled = true;
+    if (userSelectedDate <= new Date()) {
+      btnDateStart.disabled = true;
 
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
       });
     } else {
-      btnTimerStart.disabled = false;
+      btnDateStart.disabled = false;
 
       iziToast.success({
         title: 'Success',
@@ -38,7 +39,7 @@ flatpickr('#datetime-picker', {
     }
   },
 });
- function convertMs(ms) {
+function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
@@ -64,29 +65,29 @@ console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20
 // В інтерфейсі таймера необхідно додавати 0, якщо в числі менше двох символів. Напиши функцію, наприклад addLeadingZero(value), яка використовує метод рядка padStart() і перед відмальовуванням інтерфейсу форматує значення.
 const addLeadingZero = value => value.toString().padStart(2, '0');
 
-btnTimerStart.addEventListener('click', () => {
+btnDateStart.addEventListener('click', () => {
   btnDateStart.disabled = true;
   inputDatePicker.disabled = true;
 
-  intervalId = setInterval()) => {
-  // скільки часу залишилось до вказаної дати
-  const nowDate = new Date();
-  const timeResult = userSelectedDate - nowDate;
-  const { days, hours, minutes, seconds } = convertMs(timeResult);
+  intervalId = setInterval(() => {
+    // скільки часу залишилось до вказаної дати
+    const nowDate = new Date();
+    const timeResult = userSelectedDate - nowDate;
+    const { days, hours, minutes, seconds } = convertMs(timeResult);
 
-  daysEl.textContent = addLeadingZero(days);
-  hoursEl.textContent = addLeadingZero(hours);
-  minutesEl.textContent = addLeadingZero(minutes);
-  secondsEl.textContent = addLeadingZero(seconds);
-  // Перевіряємо за допомогою методу .every чи задовольняють усі елементи умови колбек-функціїї.
-  // Таймер зупиняється, коли доходить до кінцевої дати, тобто залишок часу дорівнює нулю і інтерфейс виглядає так 00:00:00:00.
-  const isTimerStop = [days, hours, minutes, seconds].every(
-    value => value === 0
-  );
+    daysEl.textContent = addLeadingZero(days);
+    hoursEl.textContent = addLeadingZero(hours);
+    minutesEl.textContent = addLeadingZero(minutes);
+    secondsEl.textContent = addLeadingZero(seconds);
+    // Перевіряємо за допомогою методу .every чи задовольняють усі елементи умови колбек-функціїї.
+    // Таймер зупиняється, коли доходить до кінцевої дати, тобто залишок часу дорівнює нулю і інтерфейс виглядає так 00:00:00:00.
+    const isTimerStop = [days, hours, minutes, seconds].every(
+      value => value === 0
+    );
 
-  if (isTimerStop) {
-    clearInterval(intervalBack);
-    inputDatePicker.disabled = false;
-  }
-}, 1000);
+    if (isTimerStop) {
+      clearInterval(intervalBack);
+      inputDatePicker.disabled = false;
+    }
+  }, 1000);
 });
