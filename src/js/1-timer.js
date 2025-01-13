@@ -28,6 +28,7 @@ flatpickr('#datetime-picker', {
       iziToast.error({
         title: 'Error',
         message: 'Please choose a date in the future',
+        position: 'topRight',
       });
     } else {
       btnDateStart.disabled = false;
@@ -35,6 +36,7 @@ flatpickr('#datetime-picker', {
       iziToast.success({
         title: 'Success',
         message: 'Valid date selected!',
+        position: 'topRight',
       });
     }
   },

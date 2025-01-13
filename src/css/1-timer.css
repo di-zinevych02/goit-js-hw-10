@@ -1,31 +1,33 @@
-.date-container {
+.timer-container {
   margin-left: auto;
   margin-right: auto;
 }
-
-.main-title {
-  color: darkcyan;
-  font-size: 30px;
-  margin-bottom: 20px;
+.timer-start {
+  display: flex;
 }
-
-.date-time {
+.input-time {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
   width: 272px;
-  height: 36px;
-  padding-left: 5px;
+  height: 40px;
+  padding-left: 16px;
   border-radius: 4px;
   border: 1px solid #808080;
 }
 
-.date-time:active {
+.input-time:active {
   border: 1px solid #4e75ff;
 }
 
-.date-time:hover {
+.input-time:hover {
   border: 1px solid #2e2f42;
 }
 
-.date-time-btn {
+.start-btn {
   width: 75px;
   height: 40px;
   font-weight: 500;
@@ -40,8 +42,8 @@
   margin-bottom: 32px;
 }
 
-.date-time-btn:hover,
-.date-time-btn:focus {
+.start-btn:hover,
+.start-btn:focus {
   background-color: #6c8cff;
   color: #fff;
 }
