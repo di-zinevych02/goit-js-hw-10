@@ -89,7 +89,7 @@ btnDateStart.addEventListener('click', () => {
     );
 
     if (isTimerStop) {
-      clearInterval(intervalBack);
+      clearInterval(intervalId);
       inputDatePicker.disabled = false;
     }
   }, 1000);
